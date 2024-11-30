@@ -25,7 +25,7 @@ loadEvents(client);
 client.login(process.env.TOKEN);
 
 client.once(Events.ClientReady, (cient) => {
-  registerCommands(client, commands)
+  registerCommands(client, commands);
 });
 
 process.on('unhandledRejection', (error) => {
