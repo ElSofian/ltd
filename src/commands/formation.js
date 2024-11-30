@@ -17,14 +17,14 @@ module.exports = {
         const formation = interaction.options.getString("formation");
         
         const embed = new EmbedBuilder()
-        .setColor("#232959")
+        .setColor(client.config.colors.default)
         .setThumbnail("https://imgur.com/tofyuIy.png")
         .setTitle(`Formation ${formation}`)
         
         let roleId;
         switch (formation) {
             case "pompiste": {
-                roleId = "1297253886301573130";
+                roleId = client.config.roles.pompisteRoleId;
                 embed
                 .setDescription("Voici le lien de la formation pour devenir pompiste : [Cliquez ici](https://www.canva.com/design/DAGWSAQHTSI/-tpyOvn0bRHDFl9LUlODBg/view).");
                 break;

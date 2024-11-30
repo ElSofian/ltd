@@ -7,7 +7,7 @@ module.exports = {
 
 		// Functions
 
-		function fastEmbed(description, color = "#232959") {
+		function fastEmbed(description, color = client.config.colors.default) {
 			return new EmbedBuilder().setColor(color).setDescription(description);
 		}
 		
@@ -30,13 +30,13 @@ module.exports = {
 		}
 
 		if (command?.admin && !interaction.member.permissions.has(PermissionFlagsBits.Administrator)) return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
-		if (command?.employeeOnly && !interaction.member.roles.cache.has(client.config.employeeRoleId)) return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
+		if (command?.employeeOnly && !interaction.member.roles.cache.has(client.config.roles.employeeRoleId)) return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
 
 		try {
 			if (interaction.type == InteractionType.ApplicationCommand) return command.run(client, interaction, { errorEmbed, successEmbed });
 			if (interaction.type == InteractionType.MessageComponent) {
 				
-				if (interaction.customId != "sm" || interaction.message.id != client.config.msgPumpsId) return;
+				if (interaction.customId != "sm" || interaction.message.id != client.config.roles.msgPumpsId) return;
 
 
 				// INTERACTION WITH FUEL EMBED

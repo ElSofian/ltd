@@ -11,7 +11,7 @@ module.exports = {
 		});
 
 		// const embed = new EmbedBuilder()
-        // .setColor("#232959")
+        // .setColor(client.config.colors.default)
         // .setThumbnail("https://imgur.com/kRu9YaK.png")
         // .setTitle("Prix des Pompes")
         // .setImage("https://imgur.com/2BQFP3w.png")
