@@ -48,8 +48,8 @@ module.exports = class Logger {
         console.log(` - ${chalk.green(...args)} - ${args}`); 
     }
 
-    perso(color, ...args) {
-        console.log(`${Logger.time()} - ${chalk[color](args)}`);
+    perso(color, title, ...args) {
+        console.log(`${Logger.time()} - ${chalk[color](title)} ${args}`);
     }
 
 }

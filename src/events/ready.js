@@ -1,5 +1,12 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, ActivityType } = require('discord.js');
 
+function formatDelay(delay) {
+    const seconds = Math.floor((delay / 1000) % 60);
+    const minutes = Math.floor((delay / (1000 * 60)) % 60);
+    const hours = Math.floor(delay / (1000 * 60 * 60));
+    return `${hours}h${minutes}min${seconds}s`;
+}
+
 module.exports = {
 	name: Events.ClientReady,
 	once: true,
@@ -10,21 +17,34 @@ module.exports = {
 			activities: [{ name: `Gestionnaire du LTD`, type: ActivityType.Custom }],
 		});
 
-		// const embed = new EmbedBuilder()
-        // .setColor(client.config.colors.default)
-        // .setThumbnail("https://imgur.com/kRu9YaK.png")
-        // .setTitle("Prix des Pompes")
-        // .setImage("https://imgur.com/2BQFP3w.png")
-
-        // const pumps = await client.db.getPumpsPrice();
-        
-        // for (const pump of pumps) {
-        //     embed.addFields([{ name: pump.label, value: `» ${pump.price}$/L`, inline: true }]);
-        // }
-
-        // const channel = await client.channels.fetch("1310270036245610590");
-		// if (channel) channel.send({ embeds: [embed] }).catch(e => console.error(e));
-		// else console.log("Channel not found.");
+		const sendMessage = () => {
+			const channel = client.channels.cache.get(client.config.channels.calendarId);
+			if (channel) {
+				const embed = new EmbedBuilder()
+					.setColor(client.config.colors.default)
+					.setTitle(`Jour ${new Date().getDate()} sur 31`)
+					.setDescription("Aujourd'hui, la surprise est ... !")
+					.setTimestamp();
+				channel.send({ embeds: [embed] });
+			} else {
+				console.error('Channel non trouvé.');
+			}
+		};
+	
+		const now = new Date();
+		const targetTime = new Date();
+		targetTime.setHours(20, 0, 0, 0); // 20h00
+		if (now > targetTime) {
+			targetTime.setDate(targetTime.getDate() + 1);
+		}
+	
+		const delay = targetTime - now;
+		client.logger.perso("gray", "[SPECIAL]", `Message quotidien programmé dans ${formatDelay(delay)}.`);
+	
+		setTimeout(() => {
+			sendMessage();
+			setInterval(sendMessage, 24 * 60 * 60 * 1000);
+		}, delay);
 
 	}
 };
