@@ -33,7 +33,7 @@ module.exports = {
 	
 		const now = new Date();
 		const targetTime = new Date();
-		targetTime.setHours(20, 0, 0, 0); // 20h00
+		targetTime.setHours(0, 30, 0, 0); // 20h00
 		if (now > targetTime) {
 			targetTime.setDate(targetTime.getDate() + 1);
 		}
