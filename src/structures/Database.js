@@ -1,5 +1,4 @@
 const { createPool } = require("mysql");
-const { EmbedBuilder, WebhookClient, InteractionType, codeBlock } = require("discord.js");
 
 module.exports = class Database {
     constructor(client) {

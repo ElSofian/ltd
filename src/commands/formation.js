@@ -34,6 +34,6 @@ module.exports = {
         if (!interaction.member.roles.cache.has(roleId)) return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
         
         return interaction.reply({ embeds: [embed] });
-                    
+        
     }
 }
