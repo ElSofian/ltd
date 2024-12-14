@@ -16,7 +16,9 @@ const client = new Client({
 });
 
 client.config = require('./config.js');
+client.functions = new (require('./structures/Functions.js'))(client);
 client.db = new (require('./structures/Database.js'))(client);
+client.google = new (require('./structures/GoogleSheet.js'))(client);
 client.logger = new (require('./structures/Logger.js'))();
 
 const commands = loadCommands(client);
@@ -25,18 +27,18 @@ loadEvents(client);
 client.login(process.env.TOKEN);
 
 client.once(Events.ClientReady, (cient) => {
-  registerCommands(client, commands);
+	registerCommands(client, commands);
 });
 
-process.on('unhandledRejection', (error) => {
-	console.error('Unhandled promise rejection:', error);
-});
+// process.on('unhandledRejection', (error) => {
+// 	console.error('Unhandled promise rejection:', error);
+// });
 
-process.on('uncaughtException', (error) => {
-	console.error('Unhandled promise rejection:', error);
-});
+// process.on('uncaughtException', (error) => {
+// 	console.error('Unhandled promise rejection:', error);
+// });
 
-process.on("exit", () => {
-	if (client.interval)
-		clearInterval(client.interval);
-})
+// process.on("exit", () => {
+// 	if (client.interval)
+// 		clearInterval(client.interval);
+// })

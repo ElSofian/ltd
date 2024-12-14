@@ -36,26 +36,57 @@ module.exports = class Database {
         });
     }
 
+
+    // Employees
+
+    async getEmployee(userId) {
+        return this._queryOne("SELECT * FROM employees WHERE user_id = ?", [userId]);
+    }
+
+    async getEmployeeName(userId, returnType = "string") {
+        const row = await this._queryOne("SELECT first_name, last_name FROM employees WHERE user_id = ?", [userId]);
+        if (!row) return null;
+
+        switch(returnType) {
+            case "object": return row;
+            case "array": return [row.first_name, row.last_name];
+            default: return `${row.first_name} ${row.last_name}`;
+        }
+    }
+
+    async createEmployee(userId, firstName, lastName, grade, speciality, phone, iban) {
+        if (!speciality) speciality = "nothing";
+        return this._query("INSERT INTO employees (user_id, first_name, last_name, grade, speciality, phone, iban) VALUES (?, ?, ?, ?, ?, ?, ?)", [userId, firstName, lastName, grade, speciality, phone, iban]);
+    }
+
+    async setEmployee(userId, key, value) {
+        return this._query(`UPDATE employees SET \`${key}\` = ? WHERE user_id = ?`, [value, userId]);
+    }
+
+    async deleteEmployee(userId) {
+        return this._query("DELETE FROM employees WHERE user_id = ?", [userId]);
+    }
+
+
+    // Pumps
+
     async getPumps() {
-        const rows = await this._query("SELECT * FROM pumps");
-        return rows;
+        return this._query("SELECT * FROM pumps");
     }
 
     async getPumpsFuel() {
-        const rows = await this._query("SELECT label, fuel FROM pumps");
-        return rows;
+        return this._query("SELECT label, fuel FROM pumps");
     }
 
     async getPumpsPrice() {
-        const rows = await this._query("SELECT label, price FROM pumps");
-        return rows;
+        return this._query("SELECT label, price FROM pumps");
     }
 
     async setPumpFuel(label, fuel) {
-        await this._query("UPDATE pumps SET fuel = ? WHERE label = ?", [fuel, label]);
+        return this._query("UPDATE pumps SET fuel = ? WHERE label = ?", [fuel, label]);
     }
 
     async setPumpPrice(label, price) {
-        await this._query("UPDATE pumps SET price = ? WHERE label = ?", [price, label]);
+        return this._query("UPDATE pumps SET price = ? WHERE label = ?", [price, label]);
     }
 }

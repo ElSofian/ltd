@@ -9,7 +9,7 @@ module.exports = {
         description: "La formation à envoyer",
         type: ApplicationCommandOptionType.String,
         choices: [
-            { name: "Pompiste", value: "pompiste" }
+            { name: "pompiste", value: "pompiste" }
         ],
         required: true
     }],
@@ -24,7 +24,7 @@ module.exports = {
         let roleId;
         switch (formation) {
             case "pompiste": {
-                roleId = client.config.roles.pompisteRoleId;
+                roleId = client.config.roles.pompist;
                 embed
                 .setDescription("Voici le lien de la formation pour devenir pompiste : [Cliquez ici](https://www.canva.com/design/DAGWSAQHTSI/-tpyOvn0bRHDFl9LUlODBg/view).");
                 break;
