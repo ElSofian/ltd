@@ -93,6 +93,14 @@ module.exports = {
 					],
 				},
 				{
+					id: "683269450086219777",
+					allow: [
+						PermissionsBitField.Flags.ViewChannel,
+						PermissionsBitField.Flags.SendMessages,
+						PermissionsBitField.Flags.ReadMessageHistory
+					],
+				},
+				{
 					id: client.config.roles.manage,
 					allow: [
 						PermissionsBitField.Flags.ViewChannel,
