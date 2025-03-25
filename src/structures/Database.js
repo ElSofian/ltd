@@ -39,6 +39,10 @@ module.exports = class Database {
 
     // Employees
 
+	async getCarnet(carnetId) {
+		return this._queryOne("SELECT * FROM employees WHERE carnet_id = ?", [carnetId]);
+	}
+
     async getEmployee(userId, returnType = "object") {
         const rows = await this._query(`
             SELECT e.id, e.first_name, e.last_name, e.birth_date, e.grade, e.phone, e.iban, s.name AS speciality
@@ -66,9 +70,9 @@ module.exports = class Database {
         }
     }
 
-    async createEmployee(userId, firstName, lastName, birthDate, grade, speciality, phone, iban) {
+    async createEmployee(carnetId, userId, firstName, lastName, birthDate, grade, speciality, phone, iban) {
         if (!speciality) speciality = "nothing";
-        const query = await this._query("INSERT INTO employees (user_id, first_name, last_name, birth_date, grade, phone, iban) VALUES (?, ?, ?, ?, ?, ?, ?)", [userId, firstName, lastName, birthDate, grade, phone, iban]);
+        const query = await this._query("INSERT INTO employees (carnet_id, user_id, first_name, last_name, birth_date, grade, phone, iban) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [carnetId, userId, firstName, lastName, birthDate, grade, phone, iban]);
         return this._query("INSERT INTO employees_specialities (employee_id, speciality) VALUES (?, ?)", [query.insertId, speciality]);
     }
 

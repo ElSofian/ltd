@@ -21,7 +21,7 @@ module.exports = (client) => {
 
 		client.commands[command.name] = command;
 
-		// 1 = Slash command, 2 = Message context menu, 3 = User context menu
+		// 1 = Slash command, 2 = User context menu, 3 = Message context menu
 		const type = command.type ?? 1;
 
 		const data = {

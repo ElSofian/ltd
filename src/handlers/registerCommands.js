@@ -7,7 +7,7 @@ module.exports = async (client, commands) => {
 	const rest = new REST().setToken(process.env.TOKEN);
 
 	try {
-		await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
+		await rest.put(Routes.applicationGuildCommands(client.user.id, client.config.guildId), { body: commands });
 	} catch (error) {
 		console.error(error);
 	}
