@@ -184,7 +184,10 @@ module.exports = {
 
 				// INTERACTION WITH PHONE/IBAN BUTTON
 
-				if ((interaction.customId == "phone" || interaction.customId == "iban") && interaction.message.id == client.config.messages.msgEditId) {
+				if ((interaction.customId == "phone" || interaction.customId == "iban")) {
+
+					return errorEmbed("Cette fonctionnalité n'est pas encore disponible.", false, "reply", true);
+
 					const customId = interaction.customId;
 					
 					const embed = new EmbedBuilder()

@@ -48,7 +48,7 @@ module.exports = {
 			.replace(/\s+/g, "-")
 
 		const files = message.attachments.map(att => att.url);
-		// if (files.length < 2) return errorEmbed("❌ **2** photos sont demandés, votre carte d'identité et votre permis de conduire.");
+		if (files.length < 2) return errorEmbed("❌ **2** photos sont demandés, votre carte d'identité et votre permis de conduire.");
 
 		const validGrades = ["responsable", "manager", "ressources humaines", "chef d'équipe", "chef d'équipe vendeur", "chef d'équipe pompiste", "pompiste", "vendeur"];
 		if (!validGrades.includes(grade.toLowerCase())) errorEmbed("❌ Grade invalide.\n**Voici la liste des grades valides:** `Responsable`, `Manager`, `Ressources Humaines`, `Chef d'équipe`, `Chef d'équipe vendeur`, `Chef d'équipe pompiste`, `Pompiste`, `Vendeur`");
@@ -129,17 +129,21 @@ module.exports = {
 			.setFooter({ text: `Créé par ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL() })
 			.setTimestamp();
 		
+		const embedImage1 = new EmbedBuilder().setURL(files[0]).setImage(files[0]);
+		const embedImage2 = new EmbedBuilder().setURL(files[1]).setImage(files[1]);
+
 		const rows = new ActionRowBuilder().addComponents(
 			new ButtonBuilder().setCustomId("iban").setLabel("Changer l'IBAN").setStyle(ButtonStyle.Secondary),
 			new ButtonBuilder().setCustomId("phone").setLabel("Changer le numéro de téléphone").setStyle(ButtonStyle.Secondary),
 		)
 
 		await channel.send({
-			content: `<@${message.author.id}> voici ton carnet !`,
-			embeds: [embed],
-			components: [rows],
-			files: files.length > 0 ? files : []
+			embeds: [embed, embedImage1, embedImage2],
+			components: [rows]
 		});
+
+		await channel.send({ embeds: [successEmbed(`✅ <@!${message.author.id}> voici ton carnet !`, true)] });
+		channel.send({ content: `<@!${message.author.id}>` }).then(m => m.delete());
 
 		try {
 			await client.db.createEmployee(
