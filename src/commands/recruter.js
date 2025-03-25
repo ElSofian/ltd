@@ -23,6 +23,12 @@ module.exports = {
             required: true
         },
         {
+            name: "date-de-naissance",
+            description: "La date de naissance de l'employé",
+            type: ApplicationCommandOptionType.String,
+            required: true
+        },
+        {
             name: "grade",
             description: "Le grade de l'employé",
             type: ApplicationCommandOptionType.String,
@@ -77,39 +83,44 @@ module.exports = {
         const employee = interaction.options.getUser("employé");
         const nom = interaction.options.getString("nom");
         const prenom = interaction.options.getString("prenom");
+        const birthDate = interaction.options.getString("date-de-naissance");
         const grade = interaction.options.getString("grade");
         const specialite = interaction.options.getString("specialite");
         const phone = interaction.options.getNumber("num-téléphone");
         const iban = interaction.options.getString("iban");
+
+        const dateCheck = client.functions.checkDate(birthDate, true);
+        if (!dateCheck.valid) return errorEmbed(dateCheck.errorMsg, false, "editReply");
 
         const employeeData = await client.db.getEmployee(employee.id);
         if (employeeData) return errorEmbed("Cet employé est déjà présent dans la base de données de l'entreprise.", false, "editReply");
 
         try {
 
-            // Préparer les données à envoyer
             const data = {
                 action: "createEmployee",
                 nom: nom,
                 prenom: prenom,
+                dateNaissance: birthDate,
                 grade: grade,
                 specialite: specialite,
                 telephone: phone,
                 iban: iban
             };
 
-            await client.db.createEmployee(employee.id, nom, prenom, grade, specialite, phone.toString(), iban);
+            await client.db.createEmployee(employee.id, prenom, nom, birthDate, grade, specialite, phone, iban);
             await client.google.post(data);
             
             const gradeRoleId = client.functions.getGradeRoleId(grade);
             const specilityRoleId = client.functions.getSpecialityRoleId(specialite);
             const configRoles = client.config.roles;
 
-            const roles = [configRoles.ltdRoleId, configRoles.separationSales, gradeRoleId, specilityRoleId];
+            const roles = [configRoles.ltd, configRoles.separationSales, gradeRoleId, specilityRoleId];
             if (["Responsable", "Ressources Humaines"].includes(grade)) roles.push(configRoles.manageRoleId);
             if (specilityRoleId) roles.push(configRoles.separationSpeciality);
 
-            interaction.guild.members.cache.get(employee.id).roles.add(roles).catch(e => console.error(e));
+            const employeeMember = interaction.guild.members.cache.get(employee.id)
+            employeeMember.roles.add(roles).catch(e => console.error(e));
 
             successEmbed(`**${prenom} ${nom}** ajouté à Google Sheets !`, false, false, "editReply");
 

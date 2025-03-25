@@ -1,28 +1,6 @@
 const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, InteractionType, ModalBuilder, TextInputBuilder, TextInputStyle, PermissionFlagsBits } = require('discord.js');
 const axios = require('axios');
 
-function checkDate(date) {
-	const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-    if (!date || !date.match(dateRegex)) return { valid: false, errorMsg: "La date doit être au format **JJ/MM/AAAA**." }
-
-    const [day, month, year] = date.split("/").map(Number);
-    if (month < 1 || month > 12) return {  valid: false, errorMsg: "Le mois doit être compris entre 1 et 12." }
-
-    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    if (month === 2 && ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0))
-        daysInMonth[1] = 29;
-
-    if (day < 1 || day > daysInMonth[month - 1]) return {  valid: false, errorMsg: `Le jour doit être compris entre 1 et ${daysInMonth[month - 1]} pour le mois ${month}.` }
-
-    const dateObject = new Date(year, month - 1, day);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (dateObject < today) return { valid: false, errorMsg: "La date ne peut pas être dans le passé." }
-
-	return { valid: true, errorMsg: null }
-}
-
 module.exports = {
 	name: Events.InteractionCreate,
 	run: async(client, interaction) => {
@@ -52,11 +30,18 @@ module.exports = {
 			return;
 		}
 
-		if (command?.admin && (!interaction.member.permissions.has(PermissionFlagsBits.Administrator) || !client.config.admins.includes(interaction.member.id))) return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
+		const isAdmin = interaction.member.permissions.has(PermissionFlagsBits.Administrator);
+		const hasManage = interaction.member.roles.cache.has(client.config.roles.manage);
+		const hasDev = interaction.member.roles.cache.has(client.config.roles.dev);
+
+		if (command?.admin && !(isAdmin || hasManage || hasDev))
+			return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
+
 		if (command?.employeeOnly && !interaction.member.roles.cache.has(client.config.roles.employeeRoleId)) return errorEmbed("Vous n'avez pas la permission d'utiliser cette commande.");
 
 		try {
-			if (interaction.type == InteractionType.ApplicationCommand) return command.run(client, interaction, { errorEmbed, successEmbed });
+			// console.log(interaction.isMessageContextMenuCommand())
+			if (interaction.type == InteractionType.ApplicationCommand || interaction.isMessageContextMenuCommand()) return command.run(client, interaction, { errorEmbed, successEmbed });			
 			if (interaction.type == InteractionType.MessageComponent || interaction.type == InteractionType.ModalSubmit) {
 				
 
@@ -97,7 +82,7 @@ module.exports = {
 						embed.fields = embed.fields.map(field => {
 							if (field.name.replace(" 🚨", "") === pump.label) {
 								const isAlert = pump.fuel < pump.alertAmount;
-								field.name = `${pump.label}${isAlert ? " 🚨" : ""}`;
+								field.name = `${pump.label} ${isAlert ? " 🚨" : ""}`;
 								field.value = `» ${pump.fuel} litres`;
 							}
 							return field;
@@ -165,7 +150,7 @@ module.exports = {
 					const date = collector.fields.getTextInputValue("date");
 					const reason = collector.fields.getTextInputValue("reason");
 
-					const dateCheck = checkDate(date);
+					const dateCheck = client.functions.checkDate(date);
 					if (!dateCheck.valid) return collector.reply({ embeds: [errorEmbed(dateCheck.errorMsg, true)], ephemeral: true });
 					if (!reason) return collector.reply({ embeds: [errorEmbed("Veuillez entrer une raison.", true)], ephemeral: true });
 
@@ -239,7 +224,7 @@ module.exports = {
 							return console.error(`Erreur HTTP ${response.status}: ${response.data}`);
 						}
 
-						await setEmployee(interaction.member.id, customId, value);
+						await client.db.setEmployee(interaction.member.id, customId, value);
 
 						await interaction.followUp({
 							embeds: [successEmbed(`Votre **${customId == "phone" ? "numéro de téléphone" : "IBAN"}** a bien été enregistré.`, true)],

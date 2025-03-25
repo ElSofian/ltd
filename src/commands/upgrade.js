@@ -57,10 +57,9 @@ module.exports = {
         const newRoleId = client.functions.getGradeRoleId(grade ?? newRole);
         if (!newRoleId) return errorEmbed(`Je n'ai pas trouvé le rôle **${newRoleId}**.`, false, "editReply");
 
-        // interaction.guild.members.cache.get(employee.id).roles.add(newRoleId).catch(e => {
-        //     console.error(e); console.log("ok"); console.log(newRoleId)});
-        // interaction.guild.members.cache.get(employee.id).roles.add(currentRoleId).catch(e => {
-        //     console.error(e); console.log("ok2"); console.log(currentRoleId)});
+        const employeeMember = interaction.guild.members.cache.get(employee.id);
+        employeeMember.roles.add(newRoleId).catch(e => console.error(e));
+        employeeMember.roles.add(currentRoleId).catch(e => console.error(e));
 
         const data = {
             action: "upgradeEmployee",

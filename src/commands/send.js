@@ -36,7 +36,7 @@ module.exports = {
                 .setImage("https://imgur.com/9PZ1WQb.png")
                 .setTitle("Pompes")
                 for (const pump of pumps) {
-                    embed.addFields([{ name: pump.label, value: `» ${pump.fuel} litres` }]);
+                    embed.addFields([{ name: `${pump.label} ${pump.fuel < pump.alertAmount ? "🚨" : ""}`, value: `» ${pump.fuel} litres` }]);
                     sm.addOptions(
                         new StringSelectMenuOptionBuilder()
                             .setLabel(`${pump.label}${pump.fuel < pump.alertAmount ? " 🚨" : ""}`)
@@ -89,7 +89,7 @@ module.exports = {
         }
 
         const message = await interaction.channel.send({ embeds: [embed], components: components.components.length ? [components] : [] });
-        successEmbed(`Voici l'ID du message à mettre dans le fichier config: **${message.id}**`, false, true);
+        successEmbed(`Voici l'ID du message à mettre dans le fichier config: **${message.id}**\n-# Il faut redémarrer le bot pour le changement soit effectif.`, false, true);
 
     }
 }
