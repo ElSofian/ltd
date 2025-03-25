@@ -51,7 +51,7 @@ module.exports = {
 		if (files.length < 2) return errorEmbed("❌ **2** photos sont demandés, votre carte d'identité et votre permis de conduire.");
 
 		const validGrades = ["responsable", "manager", "ressources humaines", "chef d'équipe", "chef d'équipe vendeur", "chef d'équipe pompiste", "pompiste", "vendeur"];
-		if (!validGrades.includes(grade.toLowerCase())) errorEmbed("❌ Grade invalide.\n**Voici la liste des grades valides:** `Responsable`, `Manager`, `Ressources Humaines`, `Chef d'équipe`, `Chef d'équipe vendeur`, `Chef d'équipe pompiste`, `Pompiste`, `Vendeur`");
+		if (!validGrades.includes(grade.toLowerCase())) return errorEmbed("❌ Grade invalide.\n**Voici la liste des grades valides:** `Responsable`, `Manager`, `Ressources Humaines`, `Chef d'équipe`, `Chef d'équipe vendeur`, `Chef d'équipe pompiste`, `Pompiste`, `Vendeur`");
 
 		let emoji = "📝";
 		switch (grade.toLowerCase()) {
