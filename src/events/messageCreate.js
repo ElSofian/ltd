@@ -14,8 +14,8 @@ module.exports = {
 			lastMessage.delete();
 		
 		const embed = new EmbedBuilder()
-            .setColor('Red')
-            .setDescription(':warning: **Tout doit être dans un seul message (les informations + photos) !**')
+            .setColor(client.config.colors.default)
+            .setDescription(':warning: **Rappel:** Tout doit être dans un seul message (les informations + photos) !')
 
         message.channel.send({ embeds: [embed] });
 
