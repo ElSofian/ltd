@@ -3,7 +3,7 @@ const { EmbedBuilder, Events } = require('discord.js');
 module.exports = {
 	name: Events.MessageCreate,
 	run: async(client, message) => {
-		if (message.channelId !== client.config.channels.employeesId
+		if (message.channelId !== client.config.channels.employeesNotes
 			|| message.author.bot
 			|| message.author.id == client.user.id) return;
 

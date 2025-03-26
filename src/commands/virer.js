@@ -43,7 +43,7 @@ module.exports = {
         }
 
         if (["Responsable", "Ressources Humaines"].includes(employeeData.grade))
-            employeeMember.roles.remove(client.config.roles.manageRole).catch(e => console.error(e));
+            employeeMember.roles.remove(client.config.roles.manage).catch(e => console.error(e));
     
         employeeMember.roles.remove([
             client.config.roles.ltd,

@@ -47,7 +47,7 @@ module.exports = {
 
 				// INTERACTION WITH FUEL EMBED
 
-				if (interaction.customId == "sm" && interaction.message.id == client.config.messages.msgPumpsId) {
+				if (interaction.customId == "sm" && interaction.message.id == client.config.messages.pump) {
 
 					const embed = interaction.message.embeds[0];
 					if (!embed) return interaction.reply({ content: "Erreur : embed introuvable.", ephemeral: true });
