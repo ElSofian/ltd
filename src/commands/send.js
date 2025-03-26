@@ -9,6 +9,7 @@ module.exports = {
         type: ApplicationCommandOptionType.String,
         choices: [
             { name: "Pompes", value: "pumps" },
+			{ name: "Pompes publique", value: "publicPumps" },
             { name: "Prix Essence", value: "gaz_price" },
             { name: "Absences", value: "absence" },
             { name: "Modification d'informations pour employés", value: "edit" }
@@ -32,9 +33,10 @@ module.exports = {
                 .setPlaceholder("Choisissez la pompe que vous voulez éditer")
 
                 embed
+                .setTitle("Pompes")
                 .setThumbnail("https://imgur.com/TRDDKOW.png")
                 .setImage("https://imgur.com/9PZ1WQb.png")
-                .setTitle("Pompes")
+
                 for (const pump of pumps) {
                     embed.addFields([{ name: `${pump.label} ${pump.fuel < pump.alertAmount ? "🚨" : ""}`, value: `» ${pump.fuel} litres` }]);
                     sm.addOptions(
@@ -43,19 +45,37 @@ module.exports = {
                             .setValue(pump.label)
                     );
                 }
+
                 components.addComponents(sm);
                 break;
             }
+
+			case "publicPumps": {
+				
+				embed
+				.setTitle("Pompes")
+				.setThumbnail("https://imgur.com/TRDDKOW.png")
+				.setImage("https://imgur.com/9PZ1WQb.png")
+
+				for (const pump of pumps)
+                    embed.addFields([{ name: `${pump.label}`, value: `» ${pump.fuel}L / ${pump.pumpLimit}L\n» *${pump.price}$*` }]);
+
+				break;
+			}
+
             case "gaz_price": {
 
                 embed
                 .setThumbnail("https://imgur.com/TRDDKOW.png")
                 .setImage("https://imgur.com/9PZ1WQb.png")
                 .setTitle("Prix des Pompes")
+
                 for (const pump of pumps)
                     embed.addFields([{ name: pump.label, value: `» ${pump.price}$/L`, inline: true }]);
-                break;
+                
+				break;
             }
+			
             case "absence": {
 
                 const row = new ButtonBuilder()
@@ -70,6 +90,7 @@ module.exports = {
                 components.addComponents(row);
                 break;
             }
+
             case "edit": {
 
                 components.addComponents(
@@ -84,6 +105,7 @@ module.exports = {
                 
                 break;
             }
+
             default:
                 return await interaction.reply({ embeds: [errorEmbed.setDescription("L'embed spécifié n'existe pas.")] });
         }

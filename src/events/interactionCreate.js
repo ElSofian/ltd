@@ -47,7 +47,7 @@ module.exports = {
 
 				// INTERACTION WITH FUEL EMBED
 
-				if (interaction.customId == "sm" && interaction.message.id == client.config.messages.pump) {
+				if (interaction.customId == "sm" && interaction.message.id == client.config.messages.pumps) {
 
 					const embed = interaction.message.embeds[0];
 					if (!embed) return interaction.reply({ content: "Erreur : embed introuvable.", ephemeral: true });
@@ -105,6 +105,34 @@ module.exports = {
 						const row = new ActionRowBuilder().addComponents(sm);
 
 						await interaction.message.edit({ embeds: [embed], components: [row] });
+
+						try {
+							const publicChannel = await interaction.guild.channels.fetch(client.config.channels.publicPumps);
+							if (!publicChannel) throw new Error("Salon public introuvable");
+						
+							const publicMsg = await publicChannel.messages.fetch(client.config.messages.publicPumps);
+							if (!publicMsg) throw new Error("Message public introuvable");
+						
+							const publicEmbed = new EmbedBuilder()
+								.setColor(client.config.colors.default)
+								.setTitle("Pompes")
+								.setThumbnail("https://imgur.com/TRDDKOW.png")
+								.setImage("https://imgur.com/9PZ1WQb.png");
+						
+							for (const p of pumps) {
+								publicEmbed.addFields([
+									{
+										name: p.label,
+										value: `» ${p.fuel}L / ${p.pumpLimit}L\n» *${p.price}$*`
+									}
+								]);
+							}
+						
+							await publicMsg.edit({ embeds: [publicEmbed] });
+						} catch (err) {
+							console.error("❌ Erreur mise à jour message public :", err);
+						}						
+
 						await interaction.followUp({ 
 							embeds: [fastEmbed(`Vous avez mis la pompe **${pump.label}** à **${litres} litres**.`)], 
 							ephemeral: true 

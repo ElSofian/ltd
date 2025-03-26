@@ -3,7 +3,8 @@ require('dotenv').config();
 module.exports = {
 	guildId: "1292838460868005970",
 	messages: {
-		pump: "1354152710676418663",
+		pumps: "1354152710676418663",
+		publicPumps: "1354484128229101588",
 	},
 	roles: {
 		manage: "1306177401847414845",
@@ -27,6 +28,7 @@ module.exports = {
 	},
 	channels: {
 		employeesNotes: "1296948102309085265",
+		publicPumps: "1354472286522048583",
 	},
 	colors: {
 		default: "Blue",
