@@ -34,8 +34,8 @@ module.exports = {
 
                 embed
                 .setTitle("Pompes")
-                .setThumbnail("https://imgur.com/TRDDKOW.png")
-                .setImage("https://imgur.com/9PZ1WQb.png")
+                .setThumbnail(client.config.images.logo)
+                .setImage(client.config.images.ltdOutside)
 
                 for (const pump of pumps) {
                     embed.addFields([{ name: `${pump.label} ${pump.fuel < pump.alertAmount ? "🚨" : ""}`, value: `» ${pump.fuel} litres` }]);
@@ -54,11 +54,11 @@ module.exports = {
 				
 				embed
 				.setTitle("Pompes")
-				.setThumbnail("https://imgur.com/TRDDKOW.png")
-				.setImage("https://imgur.com/9PZ1WQb.png")
+				.setThumbnail(client.config.images.logo)
+				.setImage(client.config.images.ltdOutside)
 
 				for (const pump of pumps)
-                    embed.addFields([{ name: `${pump.label}`, value: `» ${pump.fuel}L / ${pump.pumpLimit}L\n» *${pump.price}$*` }]);
+                    embed.addFields([{ name: `${pump.label}`, value: `» ${pump.fuel}L / ${pump.pumpLimit}L\n» *${pump.price}$*`, inline: true }]);
 
 				break;
 			}
@@ -66,8 +66,8 @@ module.exports = {
             case "gaz_price": {
 
                 embed
-                .setThumbnail("https://imgur.com/TRDDKOW.png")
-                .setImage("https://imgur.com/9PZ1WQb.png")
+                .setThumbnail(client.config.images.logo)
+                .setImage(client.config.images.ltdOutside)
                 .setTitle("Prix des Pompes")
 
                 for (const pump of pumps)

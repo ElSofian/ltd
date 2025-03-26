@@ -116,14 +116,15 @@ module.exports = {
 							const publicEmbed = new EmbedBuilder()
 								.setColor(client.config.colors.default)
 								.setTitle("Pompes")
-								.setThumbnail("https://imgur.com/TRDDKOW.png")
-								.setImage("https://imgur.com/9PZ1WQb.png");
+								.setThumbnail(client.config.images.logo)
+								.setImage(client.config.images.ltdOutside);
 						
 							for (const p of pumps) {
 								publicEmbed.addFields([
 									{
 										name: p.label,
-										value: `» ${p.fuel}L / ${p.pumpLimit}L\n» *${p.price}$*`
+										value: `» ${p.fuel}L / ${p.pumpLimit}L\n» *${p.price}$*`,
+										inline: true
 									}
 								]);
 							}

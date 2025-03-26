@@ -18,8 +18,12 @@ function toFullWidthBold(str) {
 module.exports = {
 	name: "Créer un carnet employé",
 	type: 3,
+	admin: true,
 	run: async (client, interaction, { errorEmbed, successEmbed }) => {
 		const message = await interaction.targetMessage;
+
+		if (interaction.channelId !== client.config.channels.employeesNotes)
+			return errorEmbed(`❌ Cette commande ne peut être utilisée que dans le salon <#${client.config.channels.employeesNotes}>.`);
 
 		const existingEmployee = await client.db.getEmployee(message.author.id);
 		if (existingEmployee) return errorEmbed("❌ Cet utilisateur a déjà un carnet employé existant.");

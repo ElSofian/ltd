@@ -95,6 +95,10 @@ module.exports = class Database {
         return this._query("SELECT * FROM pumps");
     }
 
+	async getPump(label) {
+		return this._queryOne("SELECT * FROM pumps WHERE label = ?", [label]);
+	}
+
     async getPumpsFuel() {
         return this._query("SELECT label, fuel FROM pumps");
     }

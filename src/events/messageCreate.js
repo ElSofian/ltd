@@ -15,7 +15,7 @@ module.exports = {
 		
 		const embed = new EmbedBuilder()
             .setColor(client.config.colors.default)
-            .setDescription(':warning: **Rappel:** Tout doit être dans un seul message (les informations + photos) !')
+            .setDescription(`:warning: **Rappel:** Tout doit être dans un seul message (les informations + photos) et **__dans le bon format__**, voir ${client.config.messages.formExample} !`)
 
         message.channel.send({ embeds: [embed] });
 

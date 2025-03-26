@@ -5,6 +5,7 @@ module.exports = {
 	messages: {
 		pumps: "1354152710676418663",
 		publicPumps: "1354484128229101588",
+		formExample: "https://discordapp.com/channels/1292838460868005970/1296948102309085265/1354188032135266304",
 	},
 	roles: {
 		manage: "1306177401847414845",
@@ -29,6 +30,10 @@ module.exports = {
 	channels: {
 		employeesNotes: "1296948102309085265",
 		publicPumps: "1354472286522048583",
+	},
+	images: {
+		ltdOutside: "https://imgur.com/lWKxV4N.png",
+		logo: "https://imgur.com/jLPN43n.png",
 	},
 	colors: {
 		default: "Blue",
