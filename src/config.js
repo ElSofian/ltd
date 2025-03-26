@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
 	guildId: "1292838460868005970",
 	messages: {
@@ -32,5 +34,11 @@ module.exports = {
 	emojis: {
 		promo: "<:promo:1308733348784640082>",
 	},
-	database: {},	
+	database: {
+		host: process.env.DB_HOST,
+		database: process.env.DB_NAME,
+		user: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
+		port: process.env.DB_PORT,
+	},	
 }
