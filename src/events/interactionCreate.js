@@ -80,13 +80,15 @@ module.exports = {
 						pump.fuel = litres;
 
 						embed.fields = embed.fields.map(field => {
-							if (field.name.replace(" 🚨", "") === pump.label) {
+							if (field.name.replace(" 🚨", "").trim() === pump.label) {
 								const isAlert = pump.fuel < pump.alertAmount;
-								field.name = `${pump.label} ${isAlert ? " 🚨" : ""}`;
-								field.value = `» ${pump.fuel} litres`;
+								field.name = `${pump.label}${isAlert ? "  🚨" : ""}`;
+								field.value = `» ${pump.fuel}L / ${pump.pumpLimit}L`;
 							}
 							return field;
 						});
+
+						await client.db.setPumpFuel(pump.label, litres);
 
 						const sm = new StringSelectMenuBuilder()
 							.setCustomId("sm")
