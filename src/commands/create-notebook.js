@@ -32,8 +32,9 @@ module.exports = {
 
 		const phoneLine = lines.find(l => l.toLowerCase().includes("numéro"));
 		const ibanLine = lines.find(l => l.toLowerCase().includes("iban"));
-		const lastNameLine = lines.find(l => l.toLowerCase().includes("nom:"));
+		const lastNameLine = lines.find(l => l.toLowerCase().includes("nom"));
 		const firstNameLine = lines.find(l => l.toLowerCase().includes("prénom"));
+		const characterIdLine = lines.find(l => l.toLowerCase().includes("id personnage"));
 		const gradeLine = lines.find(l => l.toLowerCase().includes("grade"));
 
 		const lastName = lastNameLine?.split(":")[1]?.trim().replace("** ", "");
@@ -42,6 +43,9 @@ module.exports = {
 		if (!firstName || !lastName) return errorEmbed("❌ Impossible de récupérer le prénom ou le nom.");
 
 		const fullName = `${firstName} ${lastName}`;
+
+		const characterId = characterIdLine?.split(":")[1]?.trim().replace("** ", "") ?? "Non renseigné";
+		if (isNaN(parseInt(characterId))) return errorEmbed("❌ L'ID personnage doit être un nombre.");
 
 		const phone = phoneLine?.split(":")[1]?.trim().replace("** ", "") ?? "Non renseigné";
 		const iban = ibanLine?.split(":")[1]?.trim().replace("** ", "") ?? "Non renseigné";
@@ -59,19 +63,34 @@ module.exports = {
 
 		let emoji = "📝";
 		switch (grade.toLowerCase()) {
+			case "ceo":
+				emoji = "🌸";
+				break;
+			case "coo":
+				emoji = "🐉";
+				break;
 			case "responsable":
-			case "manager":
+				emoji = "👔";
+				break;
 			case "ressources humaines":
+				emoji = "🖥️";
+			case "manager":
+			case "manager vendeurs":
+			case "manager pompistes":
+			case "manager vendeur":
+			case "manager pompiste":
+				emoji = "🧠";
+				break;
 			case "chef d'équipe":
 			case "chef d'équipe vendeur":
 			case "chef d'équipe pompiste":
-				emoji = "👔";
+				emoji = "🎯";
 				break;
 			case "pompiste":
 				emoji = "⛽";
 				break;
 			case "vendeur":
-				emoji = "🏮";
+				emoji = "🛍️";
 				break;
 		}
 
@@ -134,8 +153,9 @@ module.exports = {
 			.setAuthor({ name: notebookName, iconURL: message.author.displayAvatarURL() })
 			.addFields(
 				{ name: "👤 Nom", value: fullName, inline: true },
-				{ name: "☎️ Numéro", value: phone },
-				{ name: "💵 IBAN", value: iban },
+				{ name: "📱 Numéro de téléphone", value: phone },
+				{ name: "💳 IBAN", value: iban },
+				{ name: "🧬 ID Personnage", value: characterId },
 				{ name: client.config.emojis.promo + " Grade", value: grade },
 			)
 			.setFooter({ text: `Créé par ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL() })
