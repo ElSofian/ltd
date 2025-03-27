@@ -199,9 +199,6 @@ module.exports = {
 
 				if ((interaction.customId == "phone" || interaction.customId == "iban")) {
 
-					if (interaction.member.id !== "683269450086219777")
-						return errorEmbed("Cette fonctionnalité n'est pas encore disponible.", false, "reply", true);
-
 					const customId = interaction.customId;
 					
 					const embed = new EmbedBuilder()
