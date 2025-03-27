@@ -169,7 +169,7 @@ module.exports = {
 			new ButtonBuilder().setCustomId("phone").setLabel("Changer le numéro de téléphone").setEmoji("📞").setStyle(ButtonStyle.Secondary),
 		)
 
-		const messageSent = await channel.send({
+		await channel.send({
 			embeds: [embed, embedImage1, embedImage2],
 			components: [rows]
 		});
@@ -181,7 +181,7 @@ module.exports = {
 			await client.db.createEmployee(
 				channel.id,
 				message.author.id,
-				messageSent.id,
+				parseInt(characterId),
 				firstName,
 				lastName,
 				null,        // birthDate
