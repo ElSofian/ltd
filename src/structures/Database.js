@@ -70,9 +70,10 @@ module.exports = class Database {
         }
     }
 
-    async createEmployee(carnetId, userId, firstName, lastName, birthDate, grade, speciality, phone, iban) {
+    async createEmployee(carnetId, userId, messageId, firstName, lastName, birthDate, grade, speciality, phone, iban) {
         if (!speciality) speciality = "nothing";
-        const query = await this._query("INSERT INTO employees (carnet_id, user_id, first_name, last_name, birth_date, grade, phone, iban) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [carnetId, userId, firstName, lastName, birthDate, grade, phone, iban]);
+        const query = await this._query("INSERT INTO employees (carnet_id, user_id, sheet_id, first_name, last_name, birth_date, grade, phone, iban) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			[carnetId, userId, messageId, firstName, lastName, birthDate, grade, phone, iban]);
         return this._query("INSERT INTO employees_specialities (employee_id, speciality) VALUES (?, ?)", [query.insertId, speciality]);
     }
 

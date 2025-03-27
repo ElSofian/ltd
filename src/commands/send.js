@@ -38,7 +38,7 @@ module.exports = {
                 .setImage(client.config.images.ltdOutside)
 
                 for (const pump of pumps) {
-                    embed.addFields([{ name: `${pump.label} ${pump.fuel < pump.alertAmount ? "🚨" : ""}`, value: `» ${pump.fuel} litres` }]);
+                    embed.addFields([{ name: `${pump.label} ${pump.fuel < pump.alertAmount ? "🚨" : ""}`, value: `» ${pump.fuel}L / ${pump.limit}L` }]);
                     sm.addOptions(
                         new StringSelectMenuOptionBuilder()
                             .setLabel(`${pump.label}${pump.fuel < pump.alertAmount ? " 🚨" : ""}`)
@@ -58,7 +58,7 @@ module.exports = {
 				.setImage(client.config.images.ltdOutside)
 
 				for (const pump of pumps)
-                    embed.addFields([{ name: `${pump.label}`, value: `» ${pump.fuel}L / ${pump.pumpLimit}L\n» *${pump.price}$*`, inline: true }]);
+                    embed.addFields([{ name: `${pump.label}`, value: `» ${pump.fuel} litres\n» *${pump.price}$*`, inline: true }]);
 
 				break;
 			}

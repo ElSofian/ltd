@@ -165,11 +165,11 @@ module.exports = {
 		const embedImage2 = new EmbedBuilder().setURL(files[1]).setImage(files[1]);
 
 		const rows = new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setCustomId("iban").setLabel("Changer l'IBAN").setStyle(ButtonStyle.Secondary),
-			new ButtonBuilder().setCustomId("phone").setLabel("Changer le numéro de téléphone").setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder().setCustomId("iban").setLabel("Changer l'IBAN").setEmoji("💳").setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder().setCustomId("phone").setLabel("Changer le numéro de téléphone").setEmoji("📞").setStyle(ButtonStyle.Secondary),
 		)
 
-		await channel.send({
+		const messageSent = await channel.send({
 			embeds: [embed, embedImage1, embedImage2],
 			components: [rows]
 		});
@@ -181,6 +181,7 @@ module.exports = {
 			await client.db.createEmployee(
 				channel.id,
 				message.author.id,
+				messageSent.id,
 				firstName,
 				lastName,
 				null,        // birthDate

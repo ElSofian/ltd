@@ -39,15 +39,15 @@ module.exports = {
 
 			case "prix-pompes": {
 
-				const pump = interaction.options.getUser("pompe");
-				const newPrice = interaction.options.getString("nouveau-prix");
+				const pump = interaction.options.getString("pompe");
+				const newPrice = interaction.options.getNumer("nouveau-prix");
 
 				const pumpData = await client.db.getPump(pump);
 				if (!pumpData) return errorEmbed("La pompe est introuvable.");
 
-				await client.db.addSpeciality(pumpData.id, speciality);
+				await client.db.setPumpPrice(pumpData.id, newPrice);
 
-				successEmbed(`La spécialité **${speciality}** a bien été ajoutée à ${employee} !`);
+				successEmbed(`Le prix de la pompe **${pump}** a bien été mis à jour à **${newPrice}$** !`);
 
 				break;
 			}

@@ -1,7 +1,43 @@
+const { EmbedBuilder } = require('discord.js');
+
 module.exports = class Functions {
     constructor(client) {
         this.client = client;
     }
+
+	async updateBotStatus(type) {
+		if (type !== "online" && type !== "offline") return console.error('Type de statut invalide.');
+		
+		const channel = this.client.channels.cache.get(this.client.config.channels.status);
+		if (!channel) return console.error('Channel "Status" non trouvé.');
+	
+		try {
+			const statusMessage = await channel.messages.fetch(this.client.config.messages.status);
+			if (!statusMessage) return console.error('Message de status non trouvé.');
+
+			const now = Math.floor(Date.now() / 1000);
+	
+			const newColor = type === "online" ? "Green" : "Red";
+			const newStatus = type === "online" ? "🟢 Opérationnel" : "🔴 Hors ligne";
+			const newChannelName = type === "online" ? '🟢』𝗦𝘁𝗮𝘁𝘂𝘀' : '🔴』𝗦𝘁𝗮𝘁𝘂𝘀';
+
+			const embed = new EmbedBuilder()
+				.setColor(newColor)
+				.setTitle("Bot LTD")
+				.setThumbnail(this.client.config.images.logo)
+				.addFields([
+					{ name: "Statut", value: newStatus },
+					{ name: "Depuis", value: `<t:${now}:R>` },
+				])
+				.setTimestamp();
+
+			channel.setName(newChannelName).catch(e => console.error(e));
+	
+			await statusMessage.edit({ embeds: [embed] });
+		} catch (error) {
+			console.error('Erreur lors de la mise à jour du message de statut :', error);
+		}
+	}
 
     getGradeRoleId(grade) {
         let gradeRoleId;

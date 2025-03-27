@@ -3,9 +3,10 @@ require('dotenv').config();
 module.exports = {
 	guildId: "1292838460868005970",
 	messages: {
-		pumps: "1354152710676418663",
-		publicPumps: "1354484128229101588",
+		pumps: "1354815255406182470",
+		publicPumps: "1354817649217114112",
 		formExample: "https://discordapp.com/channels/1292838460868005970/1296948102309085265/1354188032135266304",
+		status: "1354801660186198067",
 	},
 	roles: {
 		manage: "1306177401847414845",
@@ -29,14 +30,15 @@ module.exports = {
 	},
 	channels: {
 		employeesNotes: "1296948102309085265",
-		publicPumps: "1354472286522048583",
+		publicPumps: "1354817326595444836",
+		status: "1354800471151345705",
 	},
 	images: {
 		ltdOutside: "https://imgur.com/lWKxV4N.png",
 		logo: "https://imgur.com/jLPN43n.png",
 	},
 	colors: {
-		default: "Blue",
+		default: "#232959",
 	},
 	emojis: {
 		promo: "<:promo:1308733348784640082>",

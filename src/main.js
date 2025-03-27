@@ -30,13 +30,22 @@ client.once(Events.ClientReady, (cient) => {
 	registerCommands(client, commands);
 });
 
-// process.on('unhandledRejection', (error) => {
-// 	console.error('Unhandled promise rejection:', error);
-// });
+if (process.env.NODE_ENV === 'production') {
+	process.on('unhandledRejection', async (error) => {
+		await client.functions.updateBotStatus(2);
+		console.error('Unhandled promise rejection:', error);
+	});
 
-// process.on('uncaughtException', (error) => {
-// 	console.error('Unhandled promise rejection:', error);
-// });
+	process.on('uncaughtException', async (error) => {
+		await client.functions.updateBotStatus(2);
+		console.error('Unhandled promise rejection:', error);
+	});
+
+	process.on('SIGINT', async () => {
+		await client.functions.updateBotStatus("offline");
+		process.exit(0);
+	});
+}
 
 // process.on("exit", () => {
 // 	if (client.interval)

@@ -66,16 +66,16 @@ module.exports = {
 
 					collector.on('collect', async m => {
 						const litres = parseInt(m.content.replace(/<@!?\d+>/, '').trim());
-						if (isNaN(litres)) return await interaction.followUp({ embeds: [fastEmbed("Veuillez entrer un nombre valide.", "Red")], ephemeral: true });
+						if (isNaN(litres)) return interaction.followUp({ embeds: [fastEmbed("Veuillez entrer un nombre valide.", "Red")], ephemeral: true });
 
 						if (!pump) {
 							m.delete().catch(() => {});
-							return await interaction.followUp({ embeds: [fastEmbed("Pompe non trouvée.", "Red")], ephemeral: true });
+							return interaction.followUp({ embeds: [fastEmbed("Pompe non trouvée.", "Red")], ephemeral: true });
 						}
 
-						if (litres > pump.pumpLimit) {
+						if (litres > pump.limit) {
 							m.delete().catch(() => {});
-							return await interaction.followUp({ embeds: [fastEmbed(`La pompe **${pump.label}** ne peut pas avoir plus de **${pump.pumpLimit} litres**.`, "Red")], ephemeral: true });
+							return interaction.followUp({ embeds: [fastEmbed(`La pompe **${pump.label}** ne peut pas avoir plus de **${pump.limit} litres**.`, "Red")], ephemeral: true });
 						}
 						pump.fuel = litres;
 
@@ -83,7 +83,7 @@ module.exports = {
 							if (field.name.replace(" 🚨", "").trim() === pump.label) {
 								const isAlert = pump.fuel < pump.alertAmount;
 								field.name = `${pump.label}${isAlert ? "  🚨" : ""}`;
-								field.value = `» ${pump.fuel}L / ${pump.pumpLimit}L`;
+								field.value = `» ${pump.fuel}L / ${pump.limit}L`;
 							}
 							return field;
 						});
@@ -123,7 +123,7 @@ module.exports = {
 								publicEmbed.addFields([
 									{
 										name: p.label,
-										value: `» ${p.fuel}L / ${p.pumpLimit}L\n» *${p.price}$*`,
+										value: `» ${p.fuel} litres\n» *${p.price}$*`,
 										inline: true
 									}
 								]);
@@ -188,24 +188,6 @@ module.exports = {
 					const [prenom, nom] = await client.db.getEmployeeName(interaction.member.user.id, "array");
 					if (!prenom || !nom) return console.error(`Employé ${interaction.member.user.id} non trouvé.`);
 
-					const data = {
-						action: "setAbsence",
-						prenom,
-						nom,
-						dateFin: date,
-						raison: reason
-					};
-
-					const response = await axios.post(client.config.google.scriptURL, data, {
-						headers: { 'Content-Type': 'application/json' }
-					}).catch((error) => {
-						console.error('Erreur lors de l\'ajout de l\'absence dans Google Sheets:', error);
-					});
-
-					if (response.status !== 200) {
-						return console.error(`Erreur HTTP ${response.status}: ${response.data}`);
-					}
-
 					collector.reply({ embeds: [successEmbed("Votre absence a bien été enregistrée.", true)], ephemeral: true }).catch(() => {});
 				}
 
@@ -217,7 +199,8 @@ module.exports = {
 
 				if ((interaction.customId == "phone" || interaction.customId == "iban")) {
 
-					return errorEmbed("Cette fonctionnalité n'est pas encore disponible.", false, "reply", true);
+					if (interaction.member.id !== "683269450086219777")
+						return errorEmbed("Cette fonctionnalité n'est pas encore disponible.", false, "reply", true);
 
 					const customId = interaction.customId;
 					
@@ -236,29 +219,34 @@ module.exports = {
 
 					collector.on('collect', async m => {
 						const value = m.content.replace(/<@!?\d+>/, '').trim();
-						if (!value) return await interaction.followUp({ embeds: [fastEmbed("Veuillez entrer une valeur valide.", "Red")], ephemeral: true });
+						if (!value) return interaction.followUp({ embeds: [fastEmbed("Veuillez entrer une valeur valide.", "Red")], ephemeral: true });
 
 						const [prenom, nom] = await client.db.getEmployeeName(interaction.member.id, "array");
-						if (!prenom || !nom) return console.error(`Employé ${interaction.member.id} non trouvé.`);
-
-						const data = {
-							action: "editEmployee",
-							prenom,
-							nom,
-							options: { key: customId == "phone" ? "telephone" : "iban", value }
-						};
-
-						const response = await axios.post(client.config.google.scriptURL, data, {
-							headers: { 'Content-Type': 'application/json' }
-						}).catch((error) => {
-							console.error(`Erreur lors de l'ajout de ${customId == "phone" ? "numéro de téléphone" : "IBAN"} dans Google Sheets:`, error);
-						});
-
-						if (response.status !== 200) {
-							return console.error(`Erreur HTTP ${response.status}: ${response.data}`);
-						}
+						if (!prenom || !nom) return interaction.followUp({ embeds: [fastEmbed("Nom et prénom de l'employé non trouvé.", "Red")], ephemeral: true });
 
 						await client.db.setEmployee(interaction.member.id, customId, value);
+
+						const employeeData = await client.db.getEmployee(interaction.member.id);
+						if (!employeeData) return interaction.followUp({ embeds: [fastEmbed("Employé non trouvé.", "Red")], ephemeral: true });
+
+						const embed = interaction.message.embeds[0];
+						if (!embed) return interaction.followUp({ embeds: [fastEmbed("Embed non trouvé.", "Red")], ephemeral: true });
+
+						embed.fields = embed.fields.map(field => {
+							if (field.name.includes(customId == "phone" ? "Numéro de téléphone" : "IBAN")) {
+								field.value = value;
+							}
+							return field;
+						});
+
+						const row = new ActionRowBuilder().addComponents(
+							new ButtonBuilder().setCustomId("iban").setStyle(ButtonStyle.Secondary).setLabel("Changer l'IBAN").setEmoji("💳"),
+							new ButtonBuilder().setCustomId("phone").setStyle(ButtonStyle.Secondary).setLabel("Changer le Numéro de Téléphone").setEmoji("📞"),
+						)
+						
+						const embeds = [embed, interaction.message.embeds[1], interaction.message.embeds[2]];
+
+						await interaction.message.edit({ embeds: embeds, components: [row] });
 
 						await interaction.followUp({
 							embeds: [successEmbed(`Votre **${customId == "phone" ? "numéro de téléphone" : "IBAN"}** a bien été enregistré.`, true)],

@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, ActivityType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, ActivityType, Embed } = require('discord.js');
 
 function formatDelay(delay) {
     const seconds = Math.floor((delay / 1000) % 60);
@@ -17,6 +17,9 @@ module.exports = {
 			activities: [{ name: `Gestionnaire du LTD`, type: ActivityType.Custom }],
 		});
 		
+		if (process.env.NODE_ENV === 'production')
+			await client.functions.updateBotStatus("online");
+
 		// const sendMessage = () => {
 		// 	const channel = client.channels.cache.get(client.config.channels.calendarId);
 		// 	if (channel) {
