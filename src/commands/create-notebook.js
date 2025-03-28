@@ -37,10 +37,12 @@ module.exports = {
 		const characterIdLine = lines.find(l => l.toLowerCase().includes("id personnage"));
 		const gradeLine = lines.find(l => l.toLowerCase().includes("grade"));
 
-		const lastName = lastNameLine?.split(":")[1]?.trim().replace("** ", "");
-		const firstName = firstNameLine?.split(":")[1]?.trim().replace("** ", "");
+		const sanitizeName = str => str.replace(/[^a-zA-ZÀ-ÿ\-'\s]/g, '');
 
-		if (!firstName || !lastName) return errorEmbed("❌ Impossible de récupérer le prénom ou le nom.");
+		const firstName = sanitizeName(firstNameLine?.split(":")[1]?.trim().replace("** ", ""));
+		const lastName = sanitizeName(lastNameLine?.split(":")[1]?.trim().replace("** ", ""));
+
+		if ((!firstName || firstName == "") || (!lastName || lastName == "")) return errorEmbed("❌ Impossible de récupérer le prénom ou le nom.");
 
 		const fullName = `${firstName} ${lastName}`;
 
