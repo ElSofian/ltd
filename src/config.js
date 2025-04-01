@@ -13,7 +13,8 @@ module.exports = {
 		direction: "1306177401847414845",
 		dev: "1296961410886008862",
 
-		teamChief: "1320023713940242472",
+		pompistTeamChief: "1296941930609115157",
+		sellerTeamChief: "1309093511655854111",
 
 		seller: "1296942261892022352",
 

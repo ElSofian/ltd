@@ -91,4 +91,9 @@ module.exports = class Functions {
     
         return { valid: true, errorMsg: null }
     }
+
+	// Capitalize First Letter
+	cfl(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+	}
 }

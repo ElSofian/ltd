@@ -60,8 +60,17 @@ module.exports = {
 		const files = message.attachments.map(att => att.url);
 		if (files.length < 2) return errorEmbed("❌ **2** photos sont demandés, votre carte d'identité et votre permis de conduire.");
 
-		const validGrades = ["responsable", "manager", "ressources humaines", "chef d'équipe", "chef d'équipe vendeur", "chef d'équipe pompiste", "pompiste", "vendeur"];
-		if (!validGrades.includes(grade.toLowerCase())) return errorEmbed("❌ Grade invalide.\n**Voici la liste des grades valides:** `Responsable`, `Manager`, `Ressources Humaines`, `Chef d'équipe`, `Chef d'équipe vendeur`, `Chef d'équipe pompiste`, `Pompiste`, `Vendeur`");
+		const validGrades = [
+			"responsable",
+			"manager",
+			"ressources humaines",
+			"chef d'équipe",
+			"chef d'équipe vendeur",
+			"chef d'équipe pompiste",
+			"pompiste",
+			"vendeur",
+		];
+		if (!validGrades.includes(grade.toLowerCase())) return errorEmbed(`❌ Grade invalide.\n**Voici la liste des grades valides:** ${validGrades.map(g => `\`${client.functions.cfl(g)}\``).join(", ")}`);
 
 		let emoji = "📝";
 		switch (grade.toLowerCase()) {
@@ -77,10 +86,6 @@ module.exports = {
 			case "ressources humaines":
 				emoji = "🖥️";
 			case "manager":
-			case "manager vendeurs":
-			case "manager pompistes":
-			case "manager vendeur":
-			case "manager pompiste":
 				emoji = "🧠";
 				break;
 			case "chef d'équipe":
@@ -135,6 +140,14 @@ module.exports = {
 				},
 				{
 					id: client.config.roles.direction,
+					allow: [
+						PermissionsBitField.Flags.ViewChannel,
+						PermissionsBitField.Flags.SendMessages,
+						PermissionsBitField.Flags.ReadMessageHistory
+					],
+				},
+				{
+					id: emoji == "⛽" ? client.config.roles.pompistTeamChief : emoji == "🛍️" ? client.config.roles.sellerTeamChief : client.config.roles.dev,
 					allow: [
 						PermissionsBitField.Flags.ViewChannel,
 						PermissionsBitField.Flags.SendMessages,
