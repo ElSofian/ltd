@@ -32,12 +32,12 @@ client.once(Events.ClientReady, (cient) => {
 
 if (process.env.NODE_ENV === 'production') {
 	process.on('unhandledRejection', async (error) => {
-		await client.functions.updateBotStatus(2);
+		await client.functions.updateBotStatus("offline");
 		console.error('Unhandled promise rejection:', error);
 	});
 
 	process.on('uncaughtException', async (error) => {
-		await client.functions.updateBotStatus(2);
+		await client.functions.updateBotStatus("offline");
 		console.error('Unhandled promise rejection:', error);
 	});
 
