@@ -16,9 +16,17 @@ module.exports = {
 		client.user.setPresence({
 			activities: [{ name: `Gestionnaire du LTD`, type: ActivityType.Custom }],
 		});
-		
+
 		if (process.env.NODE_ENV === 'production')
 			await client.functions.updateBotStatus("online");
+
+		// const ceoRoleId = "1296941640459620392";
+		// const ceoRole = client.guilds.cache.get(client.config.guildId).roles.cache.get(ceoRoleId);
+		// if (ceoRole) {
+		// 	ceoRole.edit({ name: "💼| CEO" })
+		// } else {
+		// 	client.logger.error("gray", "[SPECIAL]", `Rôle CEO introuvable.`);
+		// }
 
 		// const sendMessage = () => {
 		// 	const channel = client.channels.cache.get(client.config.channels.calendarId);

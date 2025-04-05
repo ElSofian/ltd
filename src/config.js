@@ -30,6 +30,9 @@ module.exports = {
 		carnets: "1354105664388988938",
 	},
 	channels: {
+		logs: {
+			pumps: "1357889450490724514",
+		},
 		employeesNotes: "1296948102309085265",
 		publicPumps: "1354817326595444836",
 		status: "1354800471151345705",

@@ -132,7 +132,23 @@ module.exports = {
 							await publicMsg.edit({ embeds: [publicEmbed] });
 						} catch (err) {
 							console.error("❌ Erreur mise à jour message public :", err);
-						}						
+						}
+
+						const logsEmbed = new EmbedBuilder()
+							.setColor(client.config.colors.default)
+							.setThumbnail(client.config.images.logo)
+							.setTitle("Pompe mise à jour")
+							.addFields([
+								{ name: "Pompe", value: pump.label, inline: false },
+								{ name: "Ancien carburant", value: `${pump.fuel} litres`, inline: true },
+								{ name: "Nouveau carburant", value: `${litres} litres`, inline: true },
+								{ name: "Mise à jour par", value: `<@${interaction.member.user.id}>`, inline: false },
+							])
+							.setTimestamp()
+
+						const logsChannel = await interaction.guild.channels.fetch(client.config.channels.logs.pumps).catch(() => {});
+						if (logsChannel)
+							await logsChannel.send({ embeds: [logsEmbed] }).catch(() => {});
 
 						await interaction.followUp({ 
 							embeds: [fastEmbed(`Vous avez mis la pompe **${pump.label}** à **${litres} litres**.`)], 
